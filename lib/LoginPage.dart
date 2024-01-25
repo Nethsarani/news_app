@@ -21,6 +21,11 @@ class _LoginPageState extends State<LoginPage> {
     passwordController.dispose();
   } 
   
+  late	DatabaseHandler	handler;		
+  @override	void	initState()	{
+    super.initState();
+    handler	=	DatabaseHandler();
+  }	
   
   
   TextFormField (
@@ -57,11 +62,19 @@ class _LoginPageState extends State<LoginPage> {
   
   ElevatedButton(
     onPressed: () {
-      Navigator.push(
-        context,MaterialPageRoute(
-          builder: (context) => const LoginScreen()
-        ),
-      );
+      AsyncSnapshot<List<User>>	snapshot =	handler.retrieveUsers(),
+        if	(snapshot.hasData)	{
+          for(var index=0; index<snapshot.data.length; index++) {
+            if("${snapshot.data![index].username}"==userNameController.Text && "${snapshot.data![index].password}"==passwordController.Text) {
+              Navigator.push(
+                context,MaterialPageRoute(
+                  builder: (context) => const HomePage()
+                ),
+              );
+            }
+          }
+          
+        }
     },
     style: ElevatedButton.styleFrom(
       backgroundColor: Colors.blue[600],

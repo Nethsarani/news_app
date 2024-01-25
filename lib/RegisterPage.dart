@@ -66,4 +66,28 @@ body:	Padding(
               User	secondUser	=	User(
                 name:	nameTextController.text,
                 age:	int.parse(ageTextController.text),
-                country:	countryTextController.text);	
+                country:	countryTextController.text);
+                List<User>	listOfUsers	=	[secondUser];
+                handler.insertUser(listOfUsers);
+                setState(()	{});
+            });
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder:	(context)	=>	const	HomeScreen()),
+            );
+          },
+          style:	ElevatedButton.styleFrom(
+            backgroundColor:	Colors.blue[600],
+            shape:	BeveledRectangleBorder(
+              borderRadius:	BorderRadius.circular(2),
+            ),
+          ),
+          child:	const	Text(
+            "SAVE",
+            style:	TextStyle(color:	Colors.white),
+          ),
+        ),
+      ),
+    ],
+  ),
+)	

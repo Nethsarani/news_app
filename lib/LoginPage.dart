@@ -29,6 +29,7 @@ class _LoginPageState extends State<LoginPage> {
   
   
   TextFormField (
+    controller: userNameController,
     decoration: const InputDecoration(
       labelText: 'Username',
       focusedBorder: OutlineInputBorder(
@@ -45,6 +46,7 @@ class _LoginPageState extends State<LoginPage> {
   ),
   
   TextFormField (
+    controller: passwordController,
     decoration: const InputDecoration(
       labelText: 'Password',
       focusedBorder: OutlineInputBorder(

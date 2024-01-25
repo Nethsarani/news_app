@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart'; 
+import 'package:news_app/DatabaseHandler.dart';
+import 'package:news_app/User.dart';
+import 'package:news_app/HomePage.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key, required this.title});
@@ -15,108 +18,84 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController userNameController = TextEditingController();
   TextEditingController passwordController = TextEditingController(); 
   
-  @override void dispose() { 
+  @override
+  void dispose() {
     super.dispose();
     userNameController.dispose();
     passwordController.dispose();
   } 
   
   late	DatabaseHandler	handler;		
-  @override	void	initState()	{
+  @override
+  void	initState()	{
     super.initState();
     handler	=	DatabaseHandler();
-  }	
-  
-  
-  TextFormField (
-    controller: userNameController,
-    decoration: const InputDecoration(
-      labelText: 'Username',
-      focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Colors.blue
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    TextFormField (
+      controller: userNameController,
+      decoration: const InputDecoration(
+        labelText: 'Username',
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+              color: Colors.blue
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+              color: Colors.grey
+          ),
         ),
       ),
-      enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Colors.grey
+    );
+    TextFormField (
+      controller: passwordController,
+      decoration: const InputDecoration(
+        labelText: 'Password',
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+              color: Colors.blue
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+              color: Colors.grey
+          ),
         ),
       ),
-    ),
-  ),
-  
-  TextFormField (
-    controller: passwordController,
-    decoration: const InputDecoration(
-      labelText: 'Password',
-      focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Colors.blue
-        ),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Colors.grey
-        ),
-      ),
-    ),
-  ), 
-  
-  ElevatedButton(
-    onPressed: () {
-      AsyncSnapshot<List<User>>	snapshot =	handler.retrieveUsers(),
-        if	(snapshot.hasData)	{
-          for(var index=0; index<snapshot.data.length; index++) {
-            if("${snapshot.data![index].username}"==userNameController.Text && "${snapshot.data![index].password}"==passwordController.Text) {
+    );
+
+    ElevatedButton(
+      onPressed: () {
+        List<User>	snapshot =	handler.retrieveUsers() as List<User>;
+          for(var index=0; index<snapshot.length; index++) {
+            if(snapshot[index].username==userNameController.text &&
+                snapshot[index].password==passwordController.text) {
               Navigator.push(
                 context,MaterialPageRoute(
                   builder: (context) => const HomePage()
-                ),
+              ),
               );
             }
           }
-          
-        }
-    },
-    style: ElevatedButton.styleFrom(
-      backgroundColor: Colors.blue[600],
-      shape: BeveledRectangleBorder(
-        borderRadius: BorderRadius.circular(2),
+
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.blue[600],
+        shape: BeveledRectangleBorder(
+          borderRadius: BorderRadius.circular(2),
+        ),
       ),
-    ),
-    child: const Text("Login",
-      style: TextStyle(color: Colors.white),
-    ),
-  ),  
-  
+      child: const Text("Login",
+        style: TextStyle(color: Colors.white),
+      ),
+    );
+
+    throw UnimplementedError();
   }
+}
   
-  class	User	{
-    final	int?	id;	
-    final	String	name;	
-    final	String	username;
-    final String password;
-    
-    User(	{
-      this.id,
-      required	this.name,
-      required this.username
-      required this.password
-    });	
-    
-    User.fromMap(Map<String,	dynamic>	res)	:	
-      id	=	res["id"],	
-      name	=	res["name"],
-      email	=	res["username"],
-      password=res["password"];	
-      
-    Map<String,	Object?>	toMap()	{	
-      return	{	
-        'id':	id,	
-        'name':	name,
-        'username':	username,
-        'password': password
-      };			
-    }	
-  }		
+
 

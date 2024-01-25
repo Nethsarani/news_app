@@ -1,6 +1,6 @@
-import	'package:sqlite/sqlite.dart';
+import 'package:sqflite/sqflite.dart';
 import	'package:path/path.dart';
-import	'package:sql lite/user.dart';	
+import	'package:news_app/User.dart';
 
 class	DatabaseHandler	{
   Future<Database>	initializeDB()	async	{

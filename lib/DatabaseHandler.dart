@@ -7,7 +7,7 @@ class	DatabaseHandler	{
     String	path	=	await	getDatabasesPath();	
     return	openDatabase(join(path,	'example.db'),
     onCreate:	(database,	version)	async	{
-      await	database.execute("CREATE	TABLE	users(id	INTEGER	PRIMARY	KEY	AUTOINCREMENT,	name	TEXT	NOT	NULL,age	INTEGER	NOT	NULL,	email	TEXT	NOT	NULL,	password	TEXT NOT NULL)",);
+      await	database.execute("CREATE	TABLE	users(id	INTEGER	PRIMARY	KEY	AUTOINCREMENT,	name	TEXT	NOT	NULL,	username	TEXT	NOT	NULL,	password	TEXT NOT NULL)",);
     },
     version:	1,
     );

@@ -79,31 +79,27 @@ class _LoginPageState extends State<LoginPage> {
   class	User	{
     final	int?	id;	
     final	String	name;	
-    final	int	age;	
-    final	String?	email;
-    final String? password;
+    final	String	username;
+    final String password;
     
     User(	{
       this.id,
       required	this.name,
-      required	this.age,
-      required this.email
+      required this.username
       required this.password
     });	
     
     User.fromMap(Map<String,	dynamic>	res)	:	
       id	=	res["id"],	
-      name	=	res["name"],	
-      age	=	res["age"],	
-      email	=	res["email"],
+      name	=	res["name"],
+      email	=	res["username"],
       password=res["password"];	
       
     Map<String,	Object?>	toMap()	{	
       return	{	
         'id':	id,	
-        'name':	name,	
-        'age':	age,
-        'email':	email,
+        'name':	name,
+        'username':	username,
         'password': password
       };			
     }	

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart'; 
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key, required this.title});
@@ -10,6 +11,17 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  
+  TextEditingController userNameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController(); 
+  
+  @override void dispose() { 
+    super.dispose();
+    userNameController.dispose();
+    passwordController.dispose();
+  } 
+  
+  
   
   TextFormField (
     decoration: const InputDecoration(
@@ -63,4 +75,37 @@ class _LoginPageState extends State<LoginPage> {
   ),  
   
   }
+  
+  class	User	{
+    final	int?	id;	
+    final	String	name;	
+    final	int	age;	
+    final	String	country;	
+    final	String?	email;	
+    
+    User(	{
+      this.id,
+      required	this.name,
+      required	this.age,
+      required	this.country,
+      this.email
+    });	
+    
+    User.fromMap(Map<String,	dynamic>	res)	:	
+      id	=	res["id"],	
+      name	=	res["name"],	
+      age	=	res["age"],	
+      country	=	res["country"],	
+      email	=	res["email"];	
+      
+    Map<String,	Object?>	toMap()	{	
+      return	{	
+        'id':	id,	
+        'name':	name,	
+        'age':	age,	
+        'country':	country,
+        'email':	email
+      };			
+    }	
+  }		
 

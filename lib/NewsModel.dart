@@ -16,7 +16,7 @@ class NewsModel{
 class ShowNews {
   List<NewsModel> categories = [];
 
-  Future<void> getNews(String category) async {
+  Future<void> getNewsCategory(String category) async {
     String url =
         "https://newsapi.org/v2/top-headlines?country=us&category=$category&apiKey=54145bc9681c42de9a6cc831aa90502b";
     var response = await http.get(Uri.parse(url));

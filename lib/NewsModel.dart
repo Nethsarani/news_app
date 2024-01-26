@@ -18,7 +18,7 @@ class ShowNews {
 
   Future<void> getNewsCategory(String category) async {
     String url =
-        "https://newsapi.org/v2/top-headlines?country=us&category=$category&apiKey=54145bc9681c42de9a6cc831aa90502b";
+        "https://newsapi.org/v2/top-headlines?country=us&category=$category&apiKey=ebda3ebe78624bd1a4eead65da01440f";
     var response = await http.get(Uri.parse(url));
 
     var jsonData = jsonDecode(response.body);
@@ -39,4 +39,29 @@ class ShowNews {
       });
     }
   }
+
+  Future<void> getNewsSearch(String keyword) async {
+    String url =
+        "https://newsapi.org/v2/everything?q=$keyword&apiKey=ebda3ebe78624bd1a4eead65da01440f";
+    var response = await http.get(Uri.parse(url));
+
+    var jsonData = jsonDecode(response.body);
+
+    if (jsonData['status'] == 'ok') {
+      jsonData["articles"].forEach((element) {
+        if (element["urlToImage"] != null && element['description'] != null) {
+          NewsModel categoryModel = NewsModel(
+            title: element["title"],
+            description: element["description"],
+            url: element["url"],
+            urlToImage: element["urlToImage"],
+            content: element["content"],
+            author: element["author"],
+          );
+          categories.add(categoryModel);
+        }
+      });
+    }
+  }
+
 }

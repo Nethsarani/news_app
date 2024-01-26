@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:news_app/NewsModel.dart';
+import 'package:news_app/Category.dart';
+import 'package:news_app/ArticleView.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 
 class CategoryNews extends StatefulWidget {
@@ -10,7 +14,7 @@ class CategoryNews extends StatefulWidget {
 }
 
 class _CategoryNewsState extends State<CategoryNews> {
-  List<ShowCategoryModel> categories = [];
+  List<NewsModel> categories = [];
   bool _loading = true;
 
   @override
@@ -20,8 +24,8 @@ class _CategoryNewsState extends State<CategoryNews> {
   }
 
   getNews() async {
-    ShowCategoryNews showCategoryNews = ShowCategoryNews();
-    await showCategoryNews.getCategoriesNews(widget.name.toLowerCase());
+    ShowNews showCategoryNews = ShowNews();
+    await showCategoryNews.getNewsCategory(widget.name.toLowerCase());
     categories = showCategoryNews.categories;
     setState(() {
       _loading = false;
@@ -36,24 +40,67 @@ class _CategoryNewsState extends State<CategoryNews> {
             widget.name,
             style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
           ),
+          actions: [
+            IconButton(
+              onPressed: () {
+                showSearch(
+                  context: context,
+                  delegate: CustomSearchDelegate(),
+                );
+              },
+              icon: const Icon(Icons.search),
+            ),// IconButton
+          ],
           centerTitle: true,
           elevation: 0.0,
         ),
-        body: Container(
-          margin: EdgeInsets.symmetric(horizontal: 10.0),
-          child: ListView.builder(
-              shrinkWrap: true,
-              physics: ClampingScrollPhysics(),
-              itemCount: categories.length,
-              itemBuilder: (context, index) {
-                return ShowCategory(
-                  Image: categories[index].urlToImage!,
-                  desc: categories[index].description!,
-                  title: categories[index].title!,
-                  url: categories[index].url!
-                );
-              }),
-        ));
+
+        body: SingleChildScrollView(
+          child: Column(
+            verticalDirection: VerticalDirection.down,
+            children: [
+              Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey.shade400,
+                            blurRadius: 10,
+                            spreadRadius: 3,
+                            offset: const Offset(5, 5)
+                      )
+                      ]
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Icon(
+                      Icons.sort,
+                      size: 26,
+                    ),
+                  )
+              ),
+
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 10.0),
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: ClampingScrollPhysics(),
+                    itemCount: categories.length,
+                    itemBuilder: (context, index) {
+                      return ShowCategory(
+                          Image: categories[index].urlToImage!,
+                          desc: categories[index].description!,
+                          title: categories[index].title!,
+                          url: categories[index].url!
+                      );
+                    }),
+              )
+            ],
+          ),
+        )
+
+    );
   }
 }
 
@@ -96,5 +143,82 @@ class ShowCategory extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+
+class CustomSearchDelegate extends SearchDelegate {
+  List<NewsModel> result = [];
+
+  getNews() async {
+    ShowNews showCategoryNews = ShowNews();
+    await showCategoryNews.getNewsSearch(query);
+    result = showCategoryNews.categories;
+    }
+
+  @override
+  List<Widget> buildActions (BuildContext context)
+  {
+    return [
+      IconButton(
+        icon: const Icon(Icons.clear),
+        onPressed: (){
+          query='';
+        },
+      ),
+    ];
+  }
+
+  @override
+  Widget buildLeading (BuildContext context)
+  {
+    return IconButton(
+      icon: const Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, null);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context)
+  {
+    getNews();
+
+    return ListView.builder(
+        shrinkWrap: true,
+        physics: ClampingScrollPhysics(),
+        itemCount: result.length,
+        itemBuilder: (context, index) {
+          return ShowCategory(
+              Image: result[index].urlToImage!,
+              desc: result[index].description!,
+              title: result[index].title!,
+              url: result[index].url!
+          );
+        });
+  }
+
+
+  @override
+  Widget buildSuggestions (BuildContext context)
+  {
+
+    getNews();
+
+    return ListView.builder(
+        shrinkWrap: true,
+        physics: ClampingScrollPhysics(),
+        itemCount: result.length,
+        itemBuilder: (context, index) {
+          return ShowCategory(
+              Image: result[index].urlToImage!,
+              desc: result[index].description!,
+              title: result[index].title!,
+              url: result[index].url!
+          );
+        });
+
+    //return Text("data");
   }
 }

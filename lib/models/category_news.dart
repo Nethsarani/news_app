@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:news_app/NewsModel.dart';
-import 'package:news_app/Category.dart';
-import 'package:news_app/ArticleView.dart';
+import 'package:news_app/models/NewsModel.dart';
+import 'package:news_app/models/Category.dart';
+import 'package:news_app/pages/ArticleView.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 
@@ -16,24 +16,32 @@ class CategoryNews extends StatefulWidget {
 class _CategoryNewsState extends State<CategoryNews> {
   List<NewsModel> categories = [];
   bool _loading = true;
+  List<String> dropDown = <String>["Newest first", "Popularity"];
+  String sortValue="Newest first";
 
   @override
   void initState() {
     super.initState();
-    getNews();
+    setState(() {
+      getNews(sortValue);
+    });
+
   }
 
-  getNews() async {
+  getNews(String sort) async {
     ShowNews showCategoryNews = ShowNews();
-    await showCategoryNews.getNewsCategory(widget.name.toLowerCase());
+    await showCategoryNews.getNewsCategory(widget.name.toLowerCase(),sort);
     categories = showCategoryNews.categories;
     setState(() {
       _loading = false;
     });
   }
 
+
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -59,49 +67,73 @@ class _CategoryNewsState extends State<CategoryNews> {
           child: Column(
             verticalDirection: VerticalDirection.down,
             children: [
-              Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey.shade400,
-                            blurRadius: 10,
-                            spreadRadius: 3,
-                            offset: const Offset(5, 5)
+              DropdownButton<String>(
+                alignment: AlignmentDirectional.bottomStart,
+                  padding: EdgeInsets.fromLTRB(250.0,0,0,10),
+                  underline: Container(),
+                  icon: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.shade400,
+                                blurRadius: 10,
+                                spreadRadius: 3,
+                                offset: const Offset(5, 5)
+                            )
+                          ]
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: Icon(
+                          Icons.sort,
+                          size: 26,
+                        ),
                       )
-                      ]
                   ),
-                  child: const Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Icon(
-                      Icons.sort,
-                      size: 26,
-                    ),
-                  )
+                  items: dropDown.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (String? value) {
+                    setState(() {
+                      sortValue=value!;
+                      getNews(sortValue);
+                    }
+                    );
+                  }
               ),
+
 
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 10.0),
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: ClampingScrollPhysics(),
-                    itemCount: categories.length,
-                    itemBuilder: (context, index) {
-                      return ShowCategory(
-                          Image: categories[index].urlToImage!,
-                          desc: categories[index].description!,
-                          title: categories[index].title!,
-                          url: categories[index].url!
-                      );
-                    }),
+                child: buildList()
               )
             ],
           ),
         )
 
     );
+
+
   }
+
+  Widget buildList()=>ListView.builder(
+      shrinkWrap: true,
+      physics: ClampingScrollPhysics(),
+      itemCount: categories.length,
+      itemBuilder: (context, index) {
+        return ShowCategory(
+            Image: categories[index].urlToImage!,
+            desc: categories[index].description!,
+            title: categories[index].title!,
+            url: categories[index].url!
+        );
+      }
+  );
 }
 
 class ShowCategory extends StatelessWidget {

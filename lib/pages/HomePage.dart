@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:news_app/Category.dart';
-import 'package:news_app/category_news.dart';
+import 'package:news_app/models/Category.dart';
+import 'package:news_app/models/category_news.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -48,13 +48,14 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text("Categories",
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
                         fontSize: 30.0),),
                     Container(
                       width: 350,
-                      //margin: EdgeInsets.only(left: 25.0),
+                      margin: EdgeInsets.only(left: 30.0),
                       child: ListView.builder(
                           shrinkWrap: true,
                           scrollDirection: Axis.vertical,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:news_app/DatabaseHandler.dart';
-import 'package:news_app/User.dart';
-import 'package:news_app/HomePage.dart';
+import 'package:news_app/models/DatabaseHandler.dart';
+import 'package:news_app/models/User.dart';
+import 'package:news_app/pages/HomePage.dart';
 
 
 class LoginPage extends StatefulWidget {

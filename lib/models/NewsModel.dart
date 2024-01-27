@@ -16,9 +16,21 @@ class NewsModel{
 class ShowNews {
   List<NewsModel> categories = [];
 
-  Future<void> getNewsCategory(String category) async {
+  Future<void> getNewsCategory(String category, String sort) async {
+
+    String sorting="publishedAt";
+    if(sort=="Popularity"){
+      sorting="popularity";
+    }
+    else if(sort=="Newest first"){
+      sorting="publishedAt";
+    }
     String url =
-        "https://newsapi.org/v2/top-headlines?country=us&category=$category&apiKey=ebda3ebe78624bd1a4eead65da01440f";
+        "https://newsapi.org/v2/top-headlines?country=us&category=$category&sortBy=$sorting&apiKey=ebda3ebe78624bd1a4eead65da01440f";
+    if(category=="all"){
+      url =
+      "https://newsapi.org/v2/top-headlines?country=us&sortBy=$sorting&apiKey=ebda3ebe78624bd1a4eead65da01440f";
+    }
     var response = await http.get(Uri.parse(url));
 
     var jsonData = jsonDecode(response.body);
